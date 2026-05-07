@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neuroprognostication Communication Tool</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #ffffff;
+    --bg-secondary: #f5f5f3;
+    --bg-tertiary: #eeece6;
+    --text-primary: #1a1a1a;
+    --text-secondary: #666660;
+    --text-tertiary: #999994;
+    --border: rgba(0,0,0,0.12);
+    --border-secondary: rgba(0,0,0,0.22);
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1a;
+      --bg-secondary: #272725;
+      --bg-tertiary: #2f2f2c;
+      --text-primary: #f0ede6;
+      --text-secondary: #a8a59e;
+      --text-tertiary: #6e6b65;
+      --border: rgba(255,255,255,0.1);
+      --border-secondary: rgba(255,255,255,0.2);
+    }
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    min-height: 100vh;
+    padding: 2rem 1rem;
+  }
+
+  .page {
+    max-width: 780px;
+    margin: 0 auto;
+  }
+
+  header {
+    margin-bottom: 1.75rem;
+  }
+
+  header h1 {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+  }
+
+  header p {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    max-width: 600px;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  @media (max-width: 560px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+
+  .card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.1rem;
+  }
+
+  .card-title {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+    margin-bottom: 12px;
+  }
+
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .field-val {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  select {
+    width: 100%;
+    font-size: 13px;
+    padding: 6px 8px;
+    border: 0.5px solid var(--border-secondary);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    color: var(--text-primary);
+    appearance: auto;
+  }
+
+  input[type=range] {
+    width: 100%;
+    accent-color: #378ADD;
+  }
+
+  .hint {
+    font-size: 10px;
+    color: var(--text-tertiary);
+    margin-top: 3px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .chart-card {
+    background: var(--bg);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.1rem;
+    margin-bottom: 12px;
+  }
+
+  .canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 360px;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0,1fr));
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  @media (max-width: 560px) {
+    .summary-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  }
+
+  .s-card {
+    border-radius: var(--radius-md);
+    padding: 9px 10px;
+  }
+
+  .s-card-lbl {
+    font-size: 11px;
+    margin-bottom: 3px;
+    line-height: 1.4;
+  }
+
+  .s-card-val {
+    font-size: 20px;
+    font-weight: 500;
+  }
+
+  .divider {
+    height: 0.5px;
+    background: var(--border);
+    margin: 14px 0;
+  }
+
+  .caveat {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+    font-style: italic;
+  }
+
+  footer {
+    margin-top: 1.5rem;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    line-height: 1.6;
+    border-top: 0.5px solid var(--border);
+    padding-top: 1rem;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <h1>Neuroprognostication — outcome communication tool</h1>
+    <p>For use before family meetings. Set the patient's premorbid baseline, then adjust the three controls to reflect your clinical assessment. The distribution is a communication scaffold — not a validated prognostic calculator.</p>
+  </header>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Patient</div>
+      <div class="field">
+        <div class="field-label">Premorbid baseline <span style="font-size:11px;color:var(--text-tertiary);">ceiling of recovery</span></div>
+        <select id="baselineSelect" onchange="onBaselineChange()">
+          <option value="9">mRS 0 — no symptoms</option>
+          <option value="8">mRS 1 — no significant disability</option>
+          <option value="7">mRS 2 — slight disability, independent</option>
+          <option value="6">mRS 3 — walks, some help needed</option>
+          <option value="5">mRS 4 — unable to walk, needs bodily care</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Distribution controls</div>
+      <div class="field">
+        <div class="field-label">Most likely outcome <span class="field-val" id="peakLabel">—</span></div>
+        <input type="range" id="peakSlider" min="0" max="9" step="0.5" value="4" oninput="render()">
+      </div>
+      <div class="field">
+        <div class="field-label">Uncertainty spread <span class="field-val" id="spreadLabel">—</span></div>
+        <input type="range" id="spreadSlider" min="0.4" max="3.5" step="0.1" value="2.0" oninput="render()">
+        <div class="hint"><span>← narrow (more certain)</span><span>wide (uncertain) →</span></div>
+      </div>
+      <div class="field">
+        <div class="field-label">Tail skew <span class="field-val" id="skewLabel">—</span></div>
+        <input type="range" id="skewSlider" min="-2.5" max="2.5" step="0.1" value="0" oninput="render()">
+        <div class="hint"><span>← toward worse</span><span>toward better →</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chart-card">
+    <div class="canvas-wrap">
+      <canvas id="progChart" role="img" aria-label="Probability distribution across neurological outcome spectrum"></canvas>
+    </div>
+    <div class="summary-grid" id="summaryGrid"></div>
+    <div class="divider"></div>
+    <p class="caveat">This distribution reflects the clinician's assessment of likely outcomes based on the available clinical picture. It is a communication aid, not a validated prognostic calculator. Probability estimates carry inherent uncertainty — particularly in the better-outcome tail.</p>
+  </div>
+
+  <footer>
+    <strong>Outcome scale:</strong> Left to right represents increasing functional recovery. The DOC states (Coma, UWS, MCS, MCS+, eMCS) are all functionally equivalent to mRS 5 (bedridden, full nursing care) but are distinguished here by level of awareness, which carries prognostic and ethical significance. The rightmost bin ("Baseline") is anchored to this patient's premorbid functional state — not an idealized full recovery.<br><br>
+    <strong>Modified Rankin Scale descriptions (Rankin 1957, van Swieten et al. 1988):</strong> mRS 0 no symptoms; mRS 1 no significant disability despite symptoms; mRS 2 slight disability, independent; mRS 3 moderate disability, walks without assistance; mRS 4 moderately severe, unable to walk or attend to bodily needs without assistance; mRS 5 severe disability, bedridden, incontinent, requires nursing care.
+  </footer>
+
+</div>
+
+<script>
+const isDark = () => matchMedia('(prefers-color-scheme:dark)').matches;
+
+const ALL_OUTCOMES = [
+  { short:'Coma',  label:'Coma',                                     bar_dk:'#791F1F', bar_lt:'#F7C1C1' },
+  { short:'UWS',   label:'Unresponsive wakefulness (VS)',             bar_dk:'#A32D2D', bar_lt:'#F09595' },
+  { short:'MCS',   label:'Minimally conscious state',                 bar_dk:'#BA7517', bar_lt:'#FAC775' },
+  { short:'MCS+',  label:'MCS+ (command following)',                  bar_dk:'#854F0B', bar_lt:'#EF9F27' },
+  { short:'eMCS',  label:'Emerged from MCS',                          bar_dk:'#633806', bar_lt:'#BA7517' },
+  { short:'mRS 4', label:'mRS 4 — unable to walk, needs bodily care', bar_dk:'#534AB7', bar_lt:'#AFA9EC' },
+  { short:'mRS 3', label:'mRS 3 — walks, needs some help',            bar_dk:'#185FA5', bar_lt:'#85B7EB' },
+  { short:'mRS 2', label:'mRS 2 — slight disability, independent',    bar_dk:'#0F6E56', bar_lt:'#5DCAA5' },
+  { short:'mRS 1', label:'mRS 1 — no significant disability',         bar_dk:'#0F6E56', bar_lt:'#1D9E75' },
+  { short:'mRS 0', label:'mRS 0 — no symptoms',                       bar_dk:'#27500A', bar_lt:'#639922' },
+];
+
+const TIER1_BRACKETS = [
+  {
+    label:'mRS 5 equivalent\n(bedridden, full nursing care)',
+    sublabel:'distinguished by level of awareness',
+    idxs:[0,1,2,3,4],
+    lt_bg:'rgba(250,193,113,0.18)', lt_border:'#BA7517', lt_txt:'#633806',
+    dk_bg:'rgba(186,117,23,0.18)',  dk_border:'#EF9F27', dk_txt:'#FAC775',
+  },
+  {
+    label:'mRS 4',
+    sublabel:'unable to walk',
+    idxs:[5],
+    lt_bg:'rgba(175,169,236,0.2)', lt_border:'#534AB7', lt_txt:'#26215C',
+    dk_bg:'rgba(83,74,183,0.2)',   dk_border:'#AFA9EC', dk_txt:'#CECBF6',
+  },
+  {
+    label:'mRS 3',
+    sublabel:'walks with aid',
+    idxs:[6],
+    lt_bg:'rgba(133,183,235,0.2)', lt_border:'#185FA5', lt_txt:'#042C53',
+    dk_bg:'rgba(24,95,165,0.2)',   dk_border:'#85B7EB', dk_txt:'#B5D4F4',
+  },
+  {
+    label:'mRS 0–2',
+    sublabel:'independent',
+    idxs:[7,8,9],
+    lt_bg:'rgba(93,202,165,0.2)',  lt_border:'#0F6E56', lt_txt:'#085041',
+    dk_bg:'rgba(15,110,86,0.2)',   dk_border:'#5DCAA5', dk_txt:'#9FE1CB',
+  },
+];
+
+const SUMMARY_GROUPS = [
+  { label:'Bedbound with DOC', idxs:[0,1,2,3,4], dk_bg:'#412402', lt_bg:'#FAEEDA', dk_txt:'#FAC775', lt_txt:'#633806' },
+  { label:'Unable to walk',    idxs:[5],          dk_bg:'#26215C', lt_bg:'#EEEDFE', dk_txt:'#CECBF6', lt_txt:'#26215C' },
+  { label:'Walks with aid',    idxs:[6],          dk_bg:'#042C53', lt_bg:'#E6F1FB', dk_txt:'#B5D4F4', lt_txt:'#042C53' },
+  { label:'Independent',       idxs:[7,8,9],      dk_bg:'#04342C', lt_bg:'#E1F5EE', dk_txt:'#9FE1CB', lt_txt:'#085041' },
+];
+
+let baseline = 9;
+let chart = null;
+function visN(){ return baseline + 1; }
+
+function erf(z){const t=1/(1+0.3275911*Math.abs(z));const p=t*(0.254829592+t*(-0.284496736+t*(1.421413741+t*(-1.453152027+t*1.061405429))));const v=1-p*Math.exp(-z*z);return z>=0?v:-v;}
+function phi(t){return Math.exp(-0.5*t*t)/Math.sqrt(2*Math.PI);}
+function Phi(t){return 0.5*(1+erf(t/Math.sqrt(2)));}
+function skewNorm(x,mean,sd,alpha){const z=(x-mean)/sd;return(2/sd)*phi(z)*Phi(alpha*z);}
+
+function computeProbs(peak,spread,skew){
+  const n=visN();
+  const raw=Array.from({length:n},(_,i)=>Math.max(0,skewNorm(i,peak,spread,skew)));
+  const tot=raw.reduce((a,b)=>a+b,0);
+  return tot===0?raw.map(()=>0):raw.map(v=>v/tot);
+}
+
+const axisPlugin = {
+  id:'axisPlugin',
+  afterDraw(chartInstance){
+    const {ctx, chartArea:{bottom}} = chartInstance;
+    const dark = isDark();
+    const n = visN();
+    const meta = chartInstance.getDatasetMeta(0).data;
+    if(!meta||!meta[0]) return;
+
+    const ROW1_Y  = bottom + 4;
+    const ROW1_H  = 16;
+    const BRACK_Y = bottom + ROW1_H + 6;
+    const BRACK_H = 40;
+
+    ctx.save();
+
+    for(let i=0;i<n;i++){
+      if(!meta[i]) continue;
+      const lbl = i===n-1 ? 'Baseline' : ALL_OUTCOMES[i].short;
+      ctx.fillStyle = dark?'rgba(255,255,255,0.5)':'rgba(0,0,0,0.5)';
+      ctx.font = i===n-1?'500 11px sans-serif':'11px sans-serif';
+      ctx.textAlign='center';
+      ctx.textBaseline='top';
+      ctx.fillText(lbl, meta[i].x, ROW1_Y);
+    }
+
+    TIER1_BRACKETS.forEach(b=>{
+      const visible=b.idxs.filter(i=>i<n);
+      if(visible.length===0) return;
+      const first=meta[visible[0]];
+      const last=meta[visible[visible.length-1]];
+      if(!first||!last) return;
+      const hw=first.width/2;
+      const x1=first.x-hw-1;
+      const x2=last.x+hw+1;
+      const w=x2-x1;
+
+      ctx.fillStyle=dark?b.dk_bg:b.lt_bg;
+      ctx.strokeStyle=dark?b.dk_border:b.lt_border;
+      ctx.lineWidth=1;
+      ctx.beginPath();
+      ctx.roundRect(x1,BRACK_Y,w,BRACK_H,4);
+      ctx.fill();
+      ctx.stroke();
+
+      const mainLines=b.label.split('\n');
+      const subLabel=b.sublabel;
+      const lineH=13;
+      const totalH=(mainLines.length+(subLabel?1:0))*lineH;
+      const startY=BRACK_Y+(BRACK_H-totalH)/2;
+      const midX=x1+w/2;
+
+      mainLines.forEach((line,li)=>{
+        ctx.font='500 10px sans-serif';
+        ctx.fillStyle=dark?b.dk_txt:b.lt_txt;
+        ctx.textAlign='center';
+        ctx.textBaseline='top';
+        ctx.fillText(line,midX,startY+li*lineH);
+      });
+      if(subLabel){
+        ctx.font='10px sans-serif';
+        ctx.fillStyle=dark?b.dk_border:b.lt_border;
+        ctx.fillText(subLabel,midX,startY+mainLines.length*lineH);
+      }
+    });
+
+    ctx.restore();
+  }
+};
+
+function buildSummary(probs,n){
+  const grid=document.getElementById('summaryGrid');
+  grid.innerHTML='';
+  const dark=isDark();
+  const sum=idxs=>idxs.filter(i=>i<n).reduce((a,i)=>a+(probs[i]||0),0);
+  SUMMARY_GROUPS.forEach(g=>{
+    if(!g.idxs.some(i=>i<n)) return;
+    const v=sum(g.idxs);
+    const c=document.createElement('div');
+    c.className='s-card';
+    c.style.background=dark?g.dk_bg:g.lt_bg;
+    c.innerHTML=`<div class="s-card-lbl" style="color:${dark?g.dk_txt:g.lt_txt}">${g.label}</div><div class="s-card-val" style="color:${dark?g.dk_txt:g.lt_txt}">${Math.round(v*100)}%</div>`;
+    grid.appendChild(c);
+  });
+}
+
+function updateLabels(peak,spread,skew,n){
+  const idx=Math.min(Math.round(Math.max(0,peak)),n-1);
+  document.getElementById('peakLabel').textContent=idx===n-1?'Premorbid baseline':ALL_OUTCOMES[idx].label;
+  document.getElementById('spreadLabel').textContent=spread<1?'narrow':spread<2?'moderate':spread<2.8?'wide':'very wide';
+  document.getElementById('skewLabel').textContent=skew>0.4?'toward better':skew<-0.4?'toward worse':'symmetric';
+}
+
+function onBaselineChange(){
+  baseline=parseInt(document.getElementById('baselineSelect').value);
+  const sl=document.getElementById('peakSlider');
+  sl.max=baseline;
+  if(parseFloat(sl.value)>baseline) sl.value=baseline;
+  render();
+}
+
+function render(){
+  const peak=parseFloat(document.getElementById('peakSlider').value);
+  const spread=parseFloat(document.getElementById('spreadSlider').value);
+  const skew=parseFloat(document.getElementById('skewSlider').value);
+  const n=visN();
+  const probs=computeProbs(peak,spread,skew);
+  const pct=probs.map(p=>Math.round(p*1000)/10);
+  const dark=isDark();
+  const outcomes=ALL_OUTCOMES.slice(0,n);
+  const barColors=outcomes.map((o,i)=>i===n-1?(dark?'#3B6D11':'#97C459'):(dark?o.bar_dk:o.bar_lt));
+  const borderColors=outcomes.map((o,i)=>i===n-1?(dark?'#97C459':'#27500A'):(dark?o.bar_lt:o.bar_dk));
+  const gc=dark?'rgba(255,255,255,0.07)':'rgba(0,0,0,0.05)';
+  const tc=dark?'rgba(255,255,255,0.45)':'rgba(0,0,0,0.45)';
+
+  updateLabels(peak,spread,skew,n);
+  buildSummary(probs,n);
+
+  if(chart){
+    chart.data.labels=Array.from({length:n},()=>'');
+    chart.data.datasets[0].data=pct;
+    chart.data.datasets[0].backgroundColor=barColors;
+    chart.data.datasets[0].borderColor=borderColors;
+    chart.options.scales.x.grid.color=gc;
+    chart.options.scales.y.grid.color=gc;
+    chart.options.scales.y.ticks.color=tc;
+    chart.options.scales.y.title.color=tc;
+    chart.update('none');
+  } else {
+    Chart.register(axisPlugin);
+    const ctx=document.getElementById('progChart').getContext('2d');
+    chart=new Chart(ctx,{
+      type:'bar',
+      data:{
+        labels:Array.from({length:n},()=>''),
+        datasets:[{
+          label:'Probability (%)',
+          data:pct,
+          backgroundColor:barColors,
+          borderColor:borderColors,
+          borderWidth:1.5,
+          borderRadius:4,
+        }]
+      },
+      options:{
+        responsive:true,
+        maintainAspectRatio:false,
+        animation:{duration:160},
+        layout:{padding:{bottom:70}},
+        plugins:{
+          legend:{display:false},
+          tooltip:{callbacks:{
+            title:items=>{const i=items[0].dataIndex;return i===n-1?'Premorbid baseline':outcomes[i].label;},
+            label:item=>`~${item.raw.toFixed(1)}% probability`
+          }},
+          axisPlugin:true,
+        },
+        scales:{
+          x:{grid:{color:gc},ticks:{display:false}},
+          y:{
+            min:0,max:70,
+            grid:{color:gc},
+            ticks:{color:tc,font:{size:11},callback:v=>v+'%'},
+            title:{display:true,text:'Estimated probability',color:tc,font:{size:11}}
+          }
+        }
+      }
+    });
+  }
+}
+
+document.getElementById('peakSlider').max = baseline;
+render();
+</script>
+</body>
+</html>
