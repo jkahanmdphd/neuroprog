@@ -2,7 +2,7 @@
 
 A clinician-facing visual aid for communicating likely neurological outcomes to patients' families. Built for use before family meetings in neurocritical care settings.
 
-**Live tool:** [yourusername.github.io/neuroprog](https://yourusername.github.io/neuroprog)
+**Live tool:** [yourusername.github.io/neuroprog](https://jkahanmdphd.github.io/neuroprog)
 
 ---
 
