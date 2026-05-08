@@ -166,9 +166,9 @@
         <div class="hint"><span>← narrow (more certain)</span><span>wide (uncertain) →</span></div>
       </div>
       <div class="field">
-        <div class="field-label">Overall outlook <span class="field-val" id="skewLabel">—</span></div>
+        <div class="field-label">If you're wrong, it's more likely <span class="field-val" id="skewLabel">—</span></div>
         <input type="range" id="skewSlider" min="-2.5" max="2.5" step="0.1" value="0" oninput="render()">
-        <div class="hint"><span>← guarded</span><span>cautiously optimistic →</span></div>
+        <div class="hint"><span>← it's worse</span><span>it's better →</span></div>
       </div>
     </div>
   </div>
@@ -409,7 +409,7 @@ function updateLabels(peak,spread,skew,n){
   const idx=Math.min(Math.round(Math.max(0,peak)),n-1);
   document.getElementById('peakLabel').textContent=idx===n-1?'Premorbid baseline':ALL_OUTCOMES[idx].label;
   document.getElementById('spreadLabel').textContent=spread<1?'narrow':spread<2?'moderate':spread<2.8?'wide':'very wide';
-  document.getElementById('skewLabel').textContent=skew>0.4?'cautiously optimistic':skew<-0.4?'guarded':'neutral';
+  document.getElementById('skewLabel').textContent=skew>0.4?'better':skew<-0.4?'worse':'symmetric';
 }
 
 function onBaselineChange(){
