@@ -77,7 +77,58 @@
   .divider { height: 0.5px; background: var(--border); margin: 14px 0; }
   .caveat { font-size: 11px; color: var(--text-tertiary); line-height: 1.6; font-style: italic; }
 
-  footer { margin-top: 1.5rem; font-size: 11px; color: var(--text-tertiary); line-height: 1.6; border-top: 0.5px solid var(--border); padding-top: 1rem; }
+  footer {
+    margin-top: 1.5rem;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    line-height: 1.7;
+    border-top: 0.5px solid var(--border);
+    padding-top: 1rem;
+  }
+
+  footer h3 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-secondary);
+    margin-top: 1rem;
+    margin-bottom: 6px;
+  }
+
+  footer h3:first-child { margin-top: 0; }
+
+  footer table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 4px;
+  }
+
+  footer td {
+    padding: 4px 8px 4px 0;
+    vertical-align: top;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    border-bottom: 0.5px solid var(--border);
+    line-height: 1.5;
+  }
+
+  footer td:first-child {
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    padding-right: 16px;
+    width: 80px;
+  }
+
+  footer tr:last-child td { border-bottom: none; }
+
+  footer .ref {
+    margin-top: 10px;
+    font-size: 10px;
+    color: var(--text-tertiary);
+    font-style: italic;
+  }
 </style>
 </head>
 <body>
@@ -132,8 +183,61 @@
   </div>
 
   <footer>
-    <strong>Outcome scale:</strong> Left to right represents increasing functional recovery, with death as the leftmost bin. The DOC states (Coma, UWS, MCS, MCS+, eMCS) are functionally equivalent to mRS 5 (bedridden, full nursing care) but are distinguished by level of awareness. The rightmost bin ("Baseline") is anchored to this patient's premorbid functional state.<br><br>
-    <strong>Modified Rankin Scale (Rankin 1957, van Swieten et al. 1988):</strong> mRS 0 no symptoms; mRS 1 no significant disability despite symptoms; mRS 2 slight disability, independent; mRS 3 moderate disability, walks without assistance; mRS 4 moderately severe, unable to walk or attend to bodily needs without assistance; mRS 5 severe disability, bedridden, incontinent, requires nursing care.
+
+    <h3>Disorders of consciousness — definitions</h3>
+    <table>
+      <tr>
+        <td>Coma</td>
+        <td>Complete absence of arousal and awareness. Eyes closed, no sleep-wake cycles, no purposeful response to stimulation.</td>
+      </tr>
+      <tr>
+        <td>UWS / VS</td>
+        <td>Unresponsive wakefulness syndrome (formerly vegetative state). Arousal without awareness — eyes may open spontaneously, sleep-wake cycles are present, but there is no reproducible evidence of conscious perception of self or environment.</td>
+      </tr>
+      <tr>
+        <td>MCS−</td>
+        <td>Minimally conscious state without language. Minimal, reproducible but inconsistent signs of awareness — such as visual pursuit, localisation to pain, or contingent affect — without command following, intelligible verbalisation, or intentional communication.</td>
+      </tr>
+      <tr>
+        <td>MCS+</td>
+        <td>Minimally conscious state with language. As MCS−, but with evidence of language function: command following, intelligible verbalisation, or intentional communication. Any one of these is sufficient to indicate MCS+.</td>
+      </tr>
+      <tr>
+        <td>eMCS</td>
+        <td>Emerged from minimally conscious state. Consistent functional communication (reliably answering yes/no questions) or functional object use (using common objects appropriately), indicating the patient has crossed the upper boundary of the disorder of consciousness spectrum.</td>
+      </tr>
+    </table>
+    <p class="ref">DOC definitions adapted from Giacino et al. (2020). Disorders of consciousness after acquired brain injury: the state of the science. <em>Nature Reviews Neurology</em>, 18, 535–550. <a href="https://www.nature.com/articles/s41582-020-00428-x" target="_blank" style="color:inherit;">doi:10.1038/s41582-020-00428-x</a></p>
+
+    <h3>Modified Rankin Scale — definitions</h3>
+    <table>
+      <tr>
+        <td>mRS 5</td>
+        <td>Severe disability. Bedridden, incontinent, and requires constant nursing care and attention. All DOC states above are functionally equivalent to mRS 5 but are distinguished by level of awareness, which carries independent prognostic and ethical significance.</td>
+      </tr>
+      <tr>
+        <td>mRS 4</td>
+        <td>Moderately severe disability. Unable to walk without assistance and unable to attend to own bodily needs without assistance.</td>
+      </tr>
+      <tr>
+        <td>mRS 3</td>
+        <td>Moderate disability. Requires some help, but able to walk without assistance.</td>
+      </tr>
+      <tr>
+        <td>mRS 2</td>
+        <td>Slight disability. Unable to carry out all previous activities, but able to look after own affairs without assistance.</td>
+      </tr>
+      <tr>
+        <td>mRS 1</td>
+        <td>No significant disability despite symptoms. Able to perform all usual duties and activities.</td>
+      </tr>
+      <tr>
+        <td>mRS 0</td>
+        <td>No symptoms.</td>
+      </tr>
+    </table>
+    <p class="ref">Modified Rankin Scale adapted from Rankin (1957) and van Swieten et al. (1988).</p>
+
   </footer>
 
 </div>
@@ -145,8 +249,8 @@ const ALL_OUTCOMES = [
   { short:'Death',  label:'Death',                                      bar_dk:'#444441', bar_lt:'#B4B2A9' },
   { short:'Coma',   label:'Coma',                                       bar_dk:'#791F1F', bar_lt:'#F7C1C1' },
   { short:'UWS',    label:'Unresponsive wakefulness (VS)',               bar_dk:'#A32D2D', bar_lt:'#F09595' },
-  { short:'MCS',    label:'Minimally conscious state',                   bar_dk:'#BA7517', bar_lt:'#FAC775' },
-  { short:'MCS+',   label:'MCS+ (command following)',                    bar_dk:'#854F0B', bar_lt:'#EF9F27' },
+  { short:'MCS−',   label:'Minimally conscious state (without language)',bar_dk:'#BA7517', bar_lt:'#FAC775' },
+  { short:'MCS+',   label:'MCS+ (with language / command following)',    bar_dk:'#854F0B', bar_lt:'#EF9F27' },
   { short:'eMCS',   label:'Emerged from MCS',                           bar_dk:'#633806', bar_lt:'#BA7517' },
   { short:'mRS 4',  label:'mRS 4 — unable to walk, needs bodily care',  bar_dk:'#534AB7', bar_lt:'#AFA9EC' },
   { short:'mRS 3',  label:'mRS 3 — walks, needs some help',             bar_dk:'#185FA5', bar_lt:'#85B7EB' },
