@@ -8,7 +8,7 @@ A clinician-facing visual aid for communicating likely neurological outcomes to 
 
 ## What this is
 
-Family meetings in neurocritical care often require clinicians to communicate prognosis under significant uncertainty. A single point estimate ("we think he will remain in a vegetative state") can be misleading — it collapses a genuinely wide distribution of possible outcomes into one number, and it fails to convey the asymmetric uncertainty that characterises most of these conversations.
+Family meetings in neurocritical care often require clinicians to communicate prognosis under significant uncertainty. A single point estimate ("we think he will remain in a minimally conscious state") can be misleading — it collapses a genuinely wide distribution of possible outcomes into one number, and it fails to convey the asymmetric uncertainty that characterises most of these conversations.
 
 This tool provides a visual probability distribution across a functional outcome spectrum, ranging from coma through disorders of consciousness (DOC) to the patient's premorbid baseline. The clinician sets three parameters before the meeting:
 
@@ -94,7 +94,7 @@ Feedback from clinicians — particularly around the clinical accuracy of bucket
 
 ## Author
 
-Developed by a neurocritical care physician as a communication aid for family meetings. If you use or adapt this tool, please maintain the disclaimer language and the distinction between communication scaffold and validated prognostic instrument.
+Developed by a neurocritical care physician as a communication aid for family meetings because he was unable to put into words how he frames the uncertainty at play. If you use or adapt this tool, please maintain the disclaimer language and the distinction between communication scaffold and validated prognostic instrument.
 
 ---
 
