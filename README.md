@@ -1,103 +1,97 @@
-# Neuroprognostication Communication Tool
+# Neuroprognostication — a visual communication concept
 
-A clinician-facing visual aid for communicating likely neurological outcomes to patients' families. Built for use before family meetings in neurocritical care settings.
+This is a conceptual prototype, built to illustrate one way that prognostic uncertainty could be communicated to families in neurocritical care. It is not a clinical tool. It is not validated. It should not be used to guide clinical decisions or family meetings.
 
-**Live tool:** [jkahanmdphd.github.io/neuroprog](https://jkahanmdphd.github.io/neuroprog)
-
----
-
-## What this is
-
-Family meetings in neurocritical care often require clinicians to communicate prognosis under significant uncertainty. A single point estimate ("we think he will remain in a minimally conscious state") can be misleading — it collapses a genuinely wide distribution of possible outcomes into one number, and it fails to convey the asymmetric uncertainty that characterises most of these conversations.
-
-This tool provides a visual probability distribution across a functional outcome spectrum, ranging from coma through disorders of consciousness (DOC) to the patient's premorbid baseline. The clinician sets three parameters before the meeting:
-
-- **Most likely outcome** — where the peak of the distribution sits
-- **Uncertainty spread** — how wide or narrow the range of plausible outcomes is
-- **Tail skew** — whether uncertainty extends more toward better or worse outcomes
-
-The tool is designed to be tuned by the treating clinician based on their synthesis of the available clinical information — examination findings, electrophysiology, neuroimaging, biomarkers, and arrest or injury characteristics — rather than algorithmically generated from individual inputs.
+**Live demo:** [jkahanmdphd.github.io/neuroprog](https://jkahanmdphd.github.io/neuroprog)
 
 ---
 
-## What this is not
+## The problem this is trying to illustrate
 
-This is **not a validated prognostic calculator**. The probability distributions are not derived from a fitted statistical model or a specific patient dataset. They are a communication scaffold — a way to visually represent the clinician's gestalt in a form that families can engage with.
+Neuroprognostication is hard for two distinct reasons.
 
-The tool should not be used to make clinical decisions, to determine goals of care in isolation, or as a substitute for a thorough multimodal prognostic assessment. All prognostic conversations should be grounded in individual patient data, assessment timepoint, and the nuances of the clinical context.
+The first is the data problem. Even the best validated prognostic tests — bilateral absent cortical SSEPs, absent pupillary reflexes, suppressed EEG without reactivity, elevated NSE — tell us about the probability of poor outcome at a population level. They do not tell us, with precision, where an individual patient will land across the full spectrum of possible functional outcomes. The literature is built largely around binary or coarsely dichotomised endpoints. The granular distribution we actually carry in our heads as clinicians — across death, disorders of consciousness, and varying degrees of functional recovery — has no validated data to populate it.
+
+The second is the communication problem. When clinicians translate their uncertainty into words, families tend to hear certainty. A statement like "we don't expect him to recover meaningful function" is understood as a prediction, not a probability. The uncertainty that the clinician intended to convey — and that is genuinely present in the data — disappears in translation.
 
 ---
 
-## Outcome scale
+## What this prototype explores
 
-The scale runs left to right from worst to best functional outcome, anchored at the right to the **patient's premorbid baseline** — not an idealised full recovery. This is a deliberate design choice: recovery beyond premorbid function is not a realistic ceiling, and framing it otherwise can mislead families.
+The central idea is simple: rather than communicating a point estimate, what if clinicians communicated a distribution?
 
-The outcome bins are:
+A distribution has three components that map onto things a clinician actually knows:
 
-| Bin | Description |
-|-----|-------------|
-| Coma | Unresponsive, no sleep-wake cycles |
-| UWS | Unresponsive wakefulness syndrome (vegetative state) — eyes open, no awareness |
-| MCS | Minimally conscious state — inconsistent but reproducible signs of awareness |
-| MCS+ | MCS with command following |
-| eMCS | Emerged from MCS — consistent command following, functional communication or object use |
+- **A peak** — the most likely outcome, in the clinician's judgment
+- **A spread** — how certain or uncertain that judgment is
+- **A skew** — whether the residual uncertainty leans toward better or worse outcomes than the peak
+
+Presenting all three to a family is more honest than presenting a single statement. It makes explicit what the clinician knows, what they don't know, and in which direction their uncertainty runs. The point is not that the numbers are precise — they aren't — but that a distribution, even an approximate one, is a more faithful representation of the clinical picture than a point estimate or a verbal statement that families interpret as certainty.
+
+The counter-argument to concerns about false precision is this: the peak has to sit somewhere. Placing it within a distribution that explicitly represents uncertainty is more epistemically honest than a verbal statement that implies more certainty than exists. Families construct their own distributions from whatever information they're given — and research suggests they do so poorly, usually in the direction of unrealistic optimism. Externalising the clinician's distribution gives families something more accurate to reason from.
+
+---
+
+## What this prototype does not do
+
+Almost everything that would be needed before this could be considered for real clinical use.
+
+- The probability distributions are not derived from any dataset. They are generated by a skewed normal curve whose parameters are set manually by the clinician. The numbers are illustrative, not empirical.
+- The outcome scale — spanning death, disorders of consciousness, and mRS — is a hybrid construct that does not exist as a validated instrument. The DOC subcategories (Coma, UWS, MCS−, MCS+, eMCS) and the mRS levels occupy the same axis but were designed for different populations and assessed with different tools.
+- The tool has not been tested with clinicians or families. Whether it aids understanding, causes harm, or changes the nature of family conversations is entirely unknown.
+- The tool does not account for timepoint, which is a major determinant of both the distribution shape and the appropriate level of certainty. A distribution at 72 hours looks very different from one at 6 months.
+- The tool does not account for condition-specific differences in recovery trajectories. Anoxic brain injury, severe TBI, SAH, and ICH have meaningfully different natural histories that would require different parameterisation.
+
+---
+
+## What would be needed to ground this properly
+
+The honest version of this tool would require prospectively collected outcome data across the full functional spectrum — including the DOC subcategories — at defined timepoints after injury, for each condition of interest. Outcomes would need to be assessed with validated instruments (CRS-R for DOC states, mRS for functional recovery) by trained assessors, with follow-up at 3, 6, and 12 months. From that dataset, an ordinal or multinomial model could be fitted with the multimodal prognostic findings as predictors, producing condition-specific, timepoint-specific conditional probability distributions across the full outcome spectrum.
+
+That dataset does not currently exist in the form needed. Building it is a legitimate and important research question.
+
+---
+
+## Outcome definitions
+
+**Disorders of consciousness** (Giacino et al., *Nature Reviews Neurology*, 2020):
+
+| State | Definition |
+|-------|------------|
+| Coma | Complete absence of arousal and awareness |
+| UWS | Unresponsive wakefulness syndrome — arousal without awareness |
+| MCS− | Minimally conscious state without language — inconsistent but reproducible awareness, no command following |
+| MCS+ | Minimally conscious state with language — command following, intelligible verbalisation, or intentional communication |
+| eMCS | Emerged from MCS — consistent functional communication or functional object use |
+
+**Modified Rankin Scale** (Rankin 1957, van Swieten et al. 1988):
+
+| Score | Definition |
+|-------|------------|
+| mRS 5 | Severe disability — bedridden, incontinent, requires full nursing care. All DOC states are functionally equivalent to mRS 5 but distinguished by level of awareness. |
 | mRS 4 | Moderately severe disability — unable to walk or attend to bodily needs without assistance |
 | mRS 3 | Moderate disability — requires some help, but able to walk without assistance |
 | mRS 2 | Slight disability — unable to perform all previous activities but independent |
-| mRS 1 | No significant disability despite symptoms — able to perform all usual duties |
+| mRS 1 | No significant disability despite symptoms |
 | mRS 0 | No symptoms |
-
-The DOC states (Coma through eMCS) are functionally equivalent to **mRS 5** (bedridden, incontinent, requires full nursing care) in terms of the modified Rankin Scale, but are distinguished here because the level of awareness within that functional floor carries significant prognostic and ethical weight.
-
-*Modified Rankin Scale descriptions adapted from Rankin (1957) and van Swieten et al. (1988).*
-
----
-
-## Using the tool
-
-1. Set the patient's **premorbid baseline** — this becomes the rightmost bin and the ceiling of the distribution
-2. Select the **most likely outcome** using the peak slider
-3. Adjust **uncertainty spread** — narrow for cases with strong multimodal convergence, wide for early or ambiguous assessments
-4. Adjust **tail skew** if uncertainty is asymmetric — for example, skewing toward worse outcomes when poor-outcome predictors are present but not conclusive
-5. Use the summary cards and distribution to anchor the family conversation
 
 ---
 
 ## Technical notes
 
-- Single-file HTML application — no framework, no build step, no backend
-- JavaScript probability model uses a skewed normal distribution parameterised by peak, spread, and skew
-- Chart rendered with [Chart.js 4.4](https://www.chartjs.org/) via CDN
-- Supports light and dark mode via `prefers-color-scheme`
-- No data is collected, transmitted, or stored
-
----
-
-## Limitations and future directions
-
-The current version has several important limitations:
-
-- Distributions are hand-parameterised by the clinician, not derived from population data
-- The tool does not currently accept structured clinical inputs (exam findings, SSEP, NSE, EEG, imaging) to generate an evidence-based prior
-- The outcome scale is adapted primarily from cardiac arrest and stroke literature; applicability to TBI and other conditions involves additional nuance
-- The tool has not been tested in clinical settings or validated against patient outcomes
-
-Future versions could incorporate condition-specific priors derived from validated datasets (TTM/TTM2 trial data, IMPACT-TBI, CARES registry) and allow clinician adjustment from an evidence-based starting point rather than a blank distribution.
-
----
-
-## Contributing
-
-Feedback from clinicians — particularly around the clinical accuracy of bucket groupings, outcome labels, and the framing of uncertainty — is welcome. Please open an issue or submit a pull request.
+- Single-file HTML application — no framework, no build step, no backend, no data collection
+- Probability model uses a skewed normal distribution parameterised by peak, spread, and skew
+- Rendered with [Chart.js 4.4](https://www.chartjs.org/)
+- Supports light and dark mode
 
 ---
 
 ## Author
 
-Developed by a neurocritical care physician as a communication aid for family meetings because he was unable to put into words how he frames the uncertainty at play. If you use or adapt this tool, please maintain the disclaimer language and the distinction between communication scaffold and validated prognostic instrument.
+A neurocritical care physician thinking out loud about how to communicate uncertainty better. Feedback from clinicians, researchers, and anyone who has sat in a neurocritical care family meeting is welcome.
 
 ---
 
 ## License
 
-MIT License — free to use, adapt, and redistribute with attribution.
+MIT — free to use, adapt, and build on. If you do something serious with this idea, please do it carefully and with appropriate validation.
